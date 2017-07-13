@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+/node_modules
+/.idea
+/typings
+/public/js/
+npm-debug.log
