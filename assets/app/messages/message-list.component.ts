@@ -25,5 +25,9 @@ export class MessageListComponent implements OnInit {
     ngOnInit() {
         this.messages = this.messageService.getMessages();
     }
+
+    handleEditClicked(_evt: string, _msg: Message) {
+        _msg.content = _evt;
+    }
     
 }
