@@ -7,11 +7,12 @@
                         type="text" 
                         class="form-control" 
                         name="content"
-                        ngModel
+                        [ngModel]="message?.content"
                         required>
             </div>
             <div class="form-group">
-                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-danger btn-xs" type="button" (click)="onClear(f)">Cancel</button>
+                    <button class="btn btn-primary btn-xs" type="submit">Save</button>
             </div>
         </form>
         <hr>
