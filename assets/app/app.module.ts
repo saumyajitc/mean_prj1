@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+import { MessageModule } from './messages/message.module';
 import { AppComponent } from "./app.component";
 import { HeaderComponent } from './header.component';
 import { MessageComponent } from './messages/message.component';
@@ -21,10 +22,6 @@ import { ErrorService } from './errors/error.service';
 @NgModule({
     declarations: [
         AppComponent,
-        MessageComponent,
-        MessageListComponent,
-        MessageInputComponent,
-        MessagesComponent,
         AuthenticationComponent,
         HeaderComponent,
         SigninComponent,
@@ -37,7 +34,8 @@ import { ErrorService } from './errors/error.service';
         FormsModule, 
         AppRoutes, 
         ReactiveFormsModule,
-        HttpModule
+        HttpModule,
+        MessageModule
     ],
     providers: [AuthService, ErrorService],
     bootstrap: [AppComponent]
