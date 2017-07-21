@@ -1,18 +1,17 @@
 import { Http, Response, Headers } from '@angular/http';
 import { Injectable, EventEmitter } from '@angular/core';
-
 import 'rxjs/Rx';
 import { Observable } from 'rxjs';
 
-
 import { Message } from './message.model';
+import { ErrorService } from './../errors/error.service';
 
 @Injectable()
 export class MessageService {
   private messages: Message[] = [];
   messageIsEdit = new EventEmitter<Message>();
 
-  constructor(private http: Http) {}
+  constructor(private http: Http, private errorService:ErrorService) {}
 
    getMessages() {
        return this.http.get('http://localhost:3000/message')
@@ -20,12 +19,21 @@ export class MessageService {
                 const messages = response.json().obj;
                 let transformedMessages: Message[] = [];
                 for (let message of messages) {
-                    transformedMessages.push(new Message(message.content, 'Sammy', message._id, null))
+                    transformedMessages.push(new Message(
+                                            message.content, 
+                                            message.user.firstName, 
+                                            message._id, 
+                                            message.user._id
+                                        ))
                 }
                 this.messages = transformedMessages;
                 return transformedMessages;
             })
-            .catch((error: Response) => Observable.throw(error.json()));
+            .catch ((error: Response) => {
+                    this.errorService.handleError(error);
+                    return Observable.throw(error.json());
+                }
+            );
        ;
    }
 
@@ -38,11 +46,19 @@ export class MessageService {
         return this.http.post('http://localhost:3000/message' + token, body, {headers: headers})
         .map((response: Response) => {
             const result = response.json();
-            const message = new Message(result.obj.content, 'Saumyajit', result.obj._id, null);
+            const message = new Message(
+                            result.obj.content, 
+                            result.obj.user.firstName, 
+                            result.obj._id, 
+                            result.obj.user._id);
             this.messages.push(message);
             return message;
         })
-        .catch((error: Response) => Observable.throw(error.json()));
+        .catch ((error: Response) => {
+                    this.errorService.handleError(error);
+                    return Observable.throw(error.json());
+                }
+            );
    }
 
    editMessage(message: Message) {
@@ -57,7 +73,11 @@ export class MessageService {
                         :   '';
         return this.http.patch('http://localhost:3000/message/' + message.messageId + token, body, {headers: headers})
         .map((response: Response) => response.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+        .catch ((error: Response) => {
+                    this.errorService.handleError(error);
+                    return Observable.throw(error.json());
+                }
+            );
    }
 
    deleteMessage(message: Message) {
@@ -67,7 +87,11 @@ export class MessageService {
                         :   '';
        return this.http.delete('http://localhost:3000/message/' + message.messageId + token)
         .map((response: Response) => response.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+        .catch ((error: Response) => {
+                    this.errorService.handleError(error);
+                    return Observable.throw(error.json());
+                }
+            );
    }
 
 }
